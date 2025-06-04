@@ -1,0 +1,99 @@
+# ハンズフリー英単語学習アプリ用 .htaccess
+# Xserver共有サーバー対応
+
+# Rewrite エンジンを有効化
+RewriteEngine On
+
+# APIルーティング設定
+RewriteRule ^api/(.*)$ api/$1 [L,QSA]
+
+# CORS設定（クロスオリジンリクエスト対応）
+<IfModule mod_headers.c>
+    # プリフライトリクエスト対応
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Max-Age "3600"
+    
+    # OPTIONSリクエストの処理
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>
+
+# セキュリティ設定
+<Files "*.db">
+    # SQLiteデータベースファイルへの直接アクセスを禁止
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.sql">
+    # SQLファイルへの直接アクセスを禁止
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# PHPエラー表示設定（本番環境では無効化）
+# php_flag display_errors off
+# php_flag log_errors on
+# php_value error_log /path/to/error.log
+
+# キャッシュ設定
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/json "access plus 1 hour"
+    ExpiresByType text/json "access plus 1 hour"
+</IfModule>
+
+# Gzip圧縮設定
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# ファイルアップロード制限
+<IfModule mod_php.c>
+    php_value upload_max_filesize "10M"
+    php_value post_max_size "10M"
+    php_value max_execution_time "30"
+    php_value memory_limit "128M"
+</IfModule>
+
+# 不正なリクエストのブロック
+<IfModule mod_rewrite.c>
+    # SQLインジェクション対策
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*embed.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*object.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [NC,OR]
+    RewriteCond %{QUERY_STRING} base64_decode.*\(.*\) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*applet.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*meta.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*marquee.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\<|%3C).*link.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} .*SELECT.*FROM.* [NC,OR]
+    RewriteCond %{QUERY_STRING} .*UNION.*ALL.*SELECT.* [NC,OR]
+    RewriteCond %{QUERY_STRING} .*DROP.*TABLE.* [NC,OR]
+    RewriteCond %{QUERY_STRING} .*INSERT.*INTO.* [NC,OR]
+    RewriteCond %{QUERY_STRING} .*DELETE.*FROM.* [NC,OR]
+    RewriteCond %{QUERY_STRING} .*UPDATE.*SET.* [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# インデックスファイルの設定
+DirectoryIndex index.html index.php
+
+# エラーページの設定
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
