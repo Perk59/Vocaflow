@@ -1,186 +1,211 @@
-# Vocaflow
-VocabFlow AI開発仕様書
-1. プロジェクト概要
+VocabFlow
+VocabFlow AI Development Specification
 
-プロジェクト名: VocabFlow - ハンズフリー英単語学習システム
-開発言語: PHP, HTML, CSS, JavaScript
-対象デバイス: スマートフォン（ブラウザベース）
+1. Project Overview
+Project Name: VocabFlow - Hands-Free English Vocabulary Learning System
 
-2. 基本機能要件
-2.1 ハンズフリー英単語リスニング機能
-機能概要
+Languages Used: PHP, HTML, CSS, JavaScript
 
-「開始」ボタン押下後、英単語と日本語訳を自動音声読み上げ
-スマホ画面に触れることなく学習継続可能
-通学・家事・ランニング中など、ながら学習に対応
+Target Device: Smartphones (Browser-based)
 
-詳細仕様
-音声読み上げ
+2. Core Functional Requirements
+2.1 Hands-Free Vocabulary Listening Feature
+Feature Overview
+After pressing the “Start” button, English words and their Japanese translations are read aloud using synthesized speech.
 
-読み上げ順序：英単語 → 間隔（2秒） → 日本語訳 → 間隔（3秒） → 次の単語
-音声合成：Web Speech API（SpeechSynthesis）を使用
-英単語：英語音声で読み上げ
-日本語訳：日本語音声で読み上げ
-読み上げ速度：調整可能（0.5倍速〜2.0倍速）
+Users can continue learning without touching the smartphone screen.
 
-音声出力モード切り替え
+Designed for multitasking scenarios such as commuting, housework, or jogging.
 
-片耳モード：左耳または右耳を選択可能
-両耳モード：ステレオ出力
-モード切り替えは学習中でも変更可能
-赤ちゃんの泣き声や呼び出し音への対応を考慮
+Detailed Specifications
+Speech Playback:
 
-学習制御
+Playback Order: English word → 2-second pause → Japanese translation → 3-second pause → next word
 
-一時停止/再開機能
-スキップ機能（現在の単語をスキップして次へ）
-音量調整（学習中でも変更可能）
-学習中断時の再開位置記憶
+Speech Synthesis: Utilizes Web Speech API (SpeechSynthesis)
 
-2.2 終了時テスト機能
-機能概要
+English words are read with an English voice.
 
-リスニング学習終了後、自動的にテストモードへ移行
-学習した単語からランダムに4択問題を出題
-問題数は学習した単語数の120%（小数点以下切り捨て）
+Japanese translations are read with a Japanese voice.
 
-詳細仕様
-問題形式
+Adjustable playback speed (0.5x to 2.0x)
 
-英単語 → 日本語訳選択
-日本語訳 → 英単語選択
-上記2パターンをランダムに出題
+Audio Output Mode Switching:
 
-問題生成ロジック
+Mono Mode: Choose between left or right ear
 
-正解選択肢：学習した単語から選出
-不正解選択肢：同じ難易度レベルの他の単語から3つ選出
-選択肢の順序はランダム
+Stereo Mode: Output to both ears
 
-結果表示
+Modes can be switched during learning
 
-正解数/総問題数
-正答率（%）
-学習時間
-間違えた単語のリスト表示
+Considerations for baby crying or call alerts
 
-3. 画面構成
-3.1 メイン画面 (index.php)
-学習設定エリア
+Learning Control:
 
-単語カテゴリ選択（TOEIC、日常会話、ビジネスなど）
-難易度レベル選択（初級、中級、上級）
-学習単語数設定（10語、20語、50語、100語）
-読み上げ速度調整スライダー
-音声出力モード選択（片耳左/片耳右/両耳）
-音量調整スライダー
+Pause / Resume function
 
-重要：学習設定は学習中でも変更可能とする
-学習制御エリア
+Skip function (skip current word and go to the next)
 
-学習開始ボタン
-一時停止/再開ボタン
-停止ボタン
-スキップボタン
+Volume control (adjustable during learning)
 
-学習状況表示エリア
+Resume from the last position after interruption
 
-現在の単語表示
-学習進捗バー（現在位置/総単語数）
-経過時間表示
-現在再生中の単語/訳の表示
+2.2 Post-Learning Quiz Feature
+Feature Overview
+Automatically transitions to test mode after listening session ends
 
-3.2 テスト画面 (test.php)
-問題表示エリア
+Random 4-choice questions based on the learned words
 
-問題文表示
-4つの選択肢ボタン
-問題番号/総問題数表示
+Number of questions: 120% of learned words (rounded down)
 
-結果表示エリア
+Detailed Specifications
+Question Formats:
 
-正解数/総問題数
-正答率（%表示）
-学習時間
-間違えた単語一覧
-5. 技術仕様
-5.1 音声制御
+English word → Choose correct Japanese translation
 
-Web Speech API: SpeechSynthesis使用
-音声言語設定:
+Japanese translation → Choose correct English word
 
-英単語：lang='en-US'
-日本語：lang='ja-JP'
+Questions are randomly presented in either pattern
 
+Question Generation Logic:
 
+Correct answers are selected from the learned vocabulary
 
-5.2 セッション管理
+Incorrect options are selected from other words at the same difficulty level
 
-PHPセッションを使用してユーザーの学習状態を管理
-セッションID生成でユーザー識別
+Answer options are displayed in random order
 
-5.3 レスポンシブ対応
+Results Display:
 
-スマートフォン最適化
-タッチ操作対応
-縦画面/横画面対応
-4. データベース設計
-5. 技術仕様
-5.1 音声制御
+Number of correct answers / Total number of questions
 
-Web Speech API: SpeechSynthesis使用
-音声言語設定:
+Accuracy rate (%)
 
-英単語：lang='en-US'
-日本語：lang='ja-JP'
+Total learning time
 
+List of incorrectly answered words
 
+3. Screen Layouts
+3.1 Main Screen (index.php)
+Learning Settings Area:
 
-5.2 セッション管理
+Select word category (TOEIC, Daily Conversation, Business, etc.)
 
-PHPセッションを使用してユーザーの学習状態を管理
-セッションID生成でユーザー識別
+Choose difficulty level (Beginner, Intermediate, Advanced)
 
-5.3 レスポンシブ対応
+Set number of words to learn (10, 20, 50, 100)
 
-スマートフォン最適化
-タッチ操作対応
-縦画面/横画面対応
-6. ファイル構成
-/vocabflow/
-├── index.php (メイン画面)
-├── test.php (テスト画面)
+Slider to adjust playback speed
+
+Select audio output mode (Mono Left / Mono Right / Stereo)
+
+Volume control slider
+
+Note: All settings can be modified during the learning session.
+
+Learning Control Area:
+
+Start Learning button
+
+Pause / Resume button
+
+Stop button
+
+Skip button
+
+Learning Status Display Area:
+
+Display of current word
+
+Progress bar (current word / total number of words)
+
+Elapsed time display
+
+Display of currently playing word and translation
+
+3.2 Test Screen (test.php)
+Question Display Area:
+
+Display of question sentence
+
+Four selectable answer buttons
+
+Display of question number / total number of questions
+
+Results Display Area:
+
+Correct answers / Total questions
+
+Accuracy rate (as %)
+
+Total learning time
+
+List of incorrectly answered words
+
+4. Database Design
+(Details omitted in original, assumed to be part of DB planning)
+
+5. Technical Specifications
+5.1 Voice Control
+Web Speech API: Uses SpeechSynthesis
+
+Voice Language Settings:
+
+English words: lang='en-US'
+
+Japanese translations: lang='ja-JP'
+
+5.2 Session Management
+PHP sessions are used to manage the user's learning status
+
+Session IDs are generated to identify users
+
+5.3 Responsive Design
+Optimized for smartphones
+
+Supports touch operations
+
+Compatible with both portrait and landscape modes
+
+6. File Structure
+ /vocabflow/
+├── index.php                # Main Screen
+├── test.php                 # Test Screen
 ├── api/
-│   ├── get_words.php (単語取得API)
-│   ├── save_progress.php (学習進捗保存API)
-│   ├── generate_test.php (テスト問題生成API)
-│   └── save_test_result.php (テスト結果保存API)
+│   ├── get_words.php        # Word Retrieval API
+│   ├── save_progress.php    # Learning Progress Save API
+│   ├── generate_test.php    # Test Question Generator API
+│   └── save_test_result.php # Test Result Save API
 ├── css/
 │   └── style.css
 ├── js/
-│   ├── speech.js (音声制御)
-│   ├── learning.js (学習制御)
-│   └── test.js (テスト制御)
+│   ├── speech.js            # Voice Control Script
+│   ├── learning.js          # Learning Control Script
+│   └── test.js              # Test Control Script
 └── config/
-    └── database.php (DB接続設定)
-7. 重要な実装ポイント
-7.1 学習中の設定変更対応
+    └── database.php         # DB Connection Settings
+7. Key Implementation Points
+7.1 Runtime Setting Adjustments
+JavaScript event listeners for real-time setting changes
 
-JavaScript設定変更イベントリスナー実装
-音声出力モード即座切り替え機能
-速度・音量のリアルタイム調整
-7.2 問題数計算ロジック
+Instant switching of audio output modes
+
+Real-time adjustment of speed and volume
+
+7.2 Question Count Calculation Logic
 $question_count = floor($learned_word_count * 1.2);
-7.3 音声制御の安定性
+7.3 Stability in Voice Playback
+Detect completion of speech playback
 
-音声読み上げ完了検知
-エラーハンドリング
-ブラウザ互換性対応
+Error handling for playback issues
 
-7.4 データ永続化
+Compatibility across major browsers
 
-学習進捗の自動保存
-中断時の再開位置記憶
-テスト結果の履歴管理
+7.4 Data Persistence
+Auto-save of learning progress
 
-この仕様書に基づいて、PHPとHTMLを使用したハンズフリー英単語学習システムの開発を進めてください。
+Resume from the exact position when returning
+
+History management of test results
+
+Based on this specification, proceed with the development of a hands-free English vocabulary learning system using PHP and HTML.
